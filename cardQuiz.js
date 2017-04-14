@@ -2,9 +2,9 @@
 var inquirer = require("inquirer");
 var fs = require("fs");
 var BasicCard = require("./basicCard");
-var output = [];
 var question;
 var answer;
+var cardsBasic = [];
 var gameStart = [
     {
         type: "input",
@@ -23,7 +23,9 @@ inquirer.prompt (gameStart).then(function(res){
     
     if (res.type == "basic") {
         console.log("let's get started");
-        basicQuiz();
+        getBasicCards();
+        //flashBasic();
+        //prompt
     }
     else if (res.type == "cloze") {
         console.log("let's cloze!");
@@ -32,40 +34,21 @@ inquirer.prompt (gameStart).then(function(res){
 
 });
 
-var basicQuiz = function (){
-    
-    //read the file
+var getBasicCards = function (){
+//read the file
 fs.readFile("questionsBasic.txt", "utf8", function(err, data){
     //splice data from file based on returns in txt file and put in array
-    output = data.split("\n");
-    console.log(output)
-   
+    var output = data.split("\n");
+    //console.log(output)
     //loop thru and create q/a pairs
-    for (var i = 0; i < output.length; i+=1) {
+    for (var i = 0; i < output.length; i+=2) {
         question = output[i],
         answer = output[i+1];
-        var quizCard = new BasicCard(question, answer)
-        inquirer.prompt({name:"answer", type:"input", message: question}).then(function(input){
-            if (input.answer == answer) {console.log("correct")} else {console.log("incorrect")}
-        })
-        //console.log(quizCard)
-    //show question
-    
-              
-            
-            
-            // inquirer.prompt(qBCard).then(function(response) {
-            //     //console.log (response.answer);
-            //     //console.log (nextQuestion.answer);
-            //     if (response.answer == nextQuestion.answer) {
-            //         console.log("Correct! "+ nextQuestion.answer);
-            //     } else {
-            //         console.log("Nope! The correct answer is " + nextQuestion.answer)
-            //     }
-            //     count++;
-            //     console.log (count)
-            //     basicQuiz();
-            // })
-        } 
+        var quizCard = new BasicCard(question, answer);
+        //create array of objects to use for prompts and answers
+        console.log(quizCard.question);
+        console.log(quizCard.answer);
+    } 
+
 })
 }
